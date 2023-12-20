@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-static  char * W1251[128] =  {   "Ђ", "Ѓ", "‚", "ѓ", "„", "…", "†", "‡", "€", "‰", "Љ",
+static const char * W1251[128] =  {   "Ђ", "Ѓ", "‚", "ѓ", "„", "…", "†", "‡", "€", "‰", "Љ",
                                  "‹", "Њ", "Ќ", "Ћ", "Џ", "ђ", "‘", "’", "“", "”", "•",
                                  "–", "—", "", "™", "љ", "›", "њ", "ќ", "ћ", "џ", 
                                  " ", "Ў", "ў", "Ј", "¤", "Ґ", "¦", "§", "Ё", "©", "Є",
@@ -14,7 +14,7 @@ static  char * W1251[128] =  {   "Ђ", "Ѓ", "‚", "ѓ", "„", "…", "†", "
                                  "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч",
                                  "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"};
 
-static  char * koi8_r[128] = {"─", "│", "┌", "┐", "└", "┘", "├", "┤", "┬", "┴", "┼",
+static const char * koi8_r[128] = {"─", "│", "┌", "┐", "└", "┘", "├", "┤", "┬", "┴", "┼",
                                   "▀", "▄", "█", "▌", "▐", "░", "▒", "▓", "⌠", "■", "∙",
                                   "√", "≈", "≤", "≥", " ", "⌡", "°", "²", "·", "÷", "═", 
                                   "║", "╒", "ё", "╓", "╔","╕", "╖", "╗", "╘", "╙", "╚",
@@ -28,7 +28,7 @@ static  char * koi8_r[128] = {"─", "│", "┌", "┐", "└", "┘", "├", "
                                   "Ы", "З", "Ш", "Э", "Щ", "Ч", "Ъ"};
 
 
-        static  char * iso[128] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+        static const char * iso[128] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
                                   " ", "Ё", "Ђ", "Ѓ","Є", "Ѕ", "І", "Ї", "Ј", "Љ", "Њ", "Ћ", "Ќ", 
                                   "", "Ў", "Џ", "А", "Б", "В", "Г", "Д",
                                   "Е", "Ж", "З", "И", "Й", "К", "Л", "М", "Н", "О", "П",
@@ -45,7 +45,6 @@ static  char * koi8_r[128] = {"─", "│", "┌", "┐", "└", "┘", "├", "
 
 int main(int argc, char** argv)
 {   
-    
     if(argc != 4)
     {
         if(argc == 2){
@@ -64,15 +63,16 @@ int main(int argc, char** argv)
     FILE* source_f = fopen(argv[1], "r");
     if(!source_f)
     {
-        fprintf(stderr, "Source file can not be open for reading\n");
+        fprintf(stderr, "Source file can not be opened for reading\n");
         exit(EXIT_FAILURE);
     }
 
     FILE* target_f = fopen(argv[3], "w");
     if(!target_f)
     {
-        fprintf(stderr, "Target file can not be open for writing\n");
-       exit(EXIT_FAILURE);
+        fprintf(stderr, "Target file can not be opened for writing\n");
+        fclose(source_f);
+        exit(EXIT_FAILURE);
     }
 
     if(strcmp(argv[2], "CP-1251") == 0)
