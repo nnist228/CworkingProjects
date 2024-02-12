@@ -23,7 +23,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "C: gcc build active file",
+            "preLaunchTask": "C: gcc build active file1",
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ],

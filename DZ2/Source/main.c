@@ -75,43 +75,27 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-    if(strcmp(argv[2], "CP-1251") == 0)
-    {
-        unsigned char ch;
-        while(fscanf(source_f, "%c", &ch) != EOF){
-            if(ch >= 128){
-                fprintf(target_f, "%s", W1251[ch - 128]);
-            } else{
-                fprintf(target_f, "%c", ch);
-            }
-        }
-    } else if(strcmp(argv[2], "KOI8-R") == 0){
-        unsigned char ch;
-        while(fscanf(source_f, "%c", &ch) != EOF){
-            if(ch >= 128){
-                fprintf(target_f, "%s",koi8_r[ch - 128]);
-            }
-            else{
-                fprintf(target_f, "%c", ch);
-            }
-        }
-    } else if(strcmp(argv[2], "ISO-8859-5") == 0){
-        unsigned char ch;
-        while(fscanf(source_f, "%c", &ch) != EOF){
-            if(ch >= 128){
-                fprintf(target_f,"%s", iso[ch - 128]);
-            } else{
-                fprintf(target_f, "%c", ch);
-            }
-        }
+    const char **  A;
+    if(strcmp(argv[2], "CP-1251") == 0){
+        A = W1251;
+    } else if(strcmp(argv[2], "KOI8-R")){
+        A = koi8_r;
+    } else if(strcmp(argv[2], "ISO-8859-5")){
+        A = iso;
     } else{
         fprintf(stderr, "Wrong encoding argument value");
         fclose(source_f);
         fclose(target_f);
         exit(EXIT_FAILURE);
     }
-
-    fclose(source_f);
-    fclose(target_f);
-    return 0;
+    
+    unsigned char ch;
+    while(fscanf(source_f, "%c", &ch) != EOF){
+        if(ch >= 128){
+            fprintf(target_f, "%s",A[ch - 128]);
+        }
+        else{
+            fprintf(target_f, "%c", ch);
+        }
+    }
 }
