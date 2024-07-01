@@ -1,0 +1,1 @@
+/usr/bin/cc -g CMakeFiles/WordsCounter.dir/Tests.c.o CMakeFiles/WordsCounter.dir/forward_list.c.o CMakeFiles/WordsCounter.dir/open_hash_struct.c.o CMakeFiles/WordsCounter.dir/hash_table_open.c.o CMakeFiles/WordsCounter.dir/hash_table_list.c.o CMakeFiles/WordsCounter.dir/hash.c.o -o WordsCounter  -lcmocka 
