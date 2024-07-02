@@ -129,54 +129,6 @@ WordsCounter/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/build
 .PHONY : WordsCounter/fast
 
-Tests.o: Tests.c.o
-.PHONY : Tests.o
-
-# target to build an object file
-Tests.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/Tests.c.o
-.PHONY : Tests.c.o
-
-Tests.i: Tests.c.i
-.PHONY : Tests.i
-
-# target to preprocess a source file
-Tests.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/Tests.c.i
-.PHONY : Tests.c.i
-
-Tests.s: Tests.c.s
-.PHONY : Tests.s
-
-# target to generate assembly for a file
-Tests.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/Tests.c.s
-.PHONY : Tests.c.s
-
-forward_list.o: forward_list.c.o
-.PHONY : forward_list.o
-
-# target to build an object file
-forward_list.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/forward_list.c.o
-.PHONY : forward_list.c.o
-
-forward_list.i: forward_list.c.i
-.PHONY : forward_list.i
-
-# target to preprocess a source file
-forward_list.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/forward_list.c.i
-.PHONY : forward_list.c.i
-
-forward_list.s: forward_list.c.s
-.PHONY : forward_list.s
-
-# target to generate assembly for a file
-forward_list.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/forward_list.c.s
-.PHONY : forward_list.c.s
-
 hash.o: hash.c.o
 .PHONY : hash.o
 
@@ -249,29 +201,29 @@ hash_table_open.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table_open.c.s
 .PHONY : hash_table_open.c.s
 
-open_hash_struct.o: open_hash_struct.c.o
-.PHONY : open_hash_struct.o
+main.o: main.c.o
+.PHONY : main.o
 
 # target to build an object file
-open_hash_struct.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/open_hash_struct.c.o
-.PHONY : open_hash_struct.c.o
+main.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/main.c.o
+.PHONY : main.c.o
 
-open_hash_struct.i: open_hash_struct.c.i
-.PHONY : open_hash_struct.i
+main.i: main.c.i
+.PHONY : main.i
 
 # target to preprocess a source file
-open_hash_struct.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/open_hash_struct.c.i
-.PHONY : open_hash_struct.c.i
+main.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/main.c.i
+.PHONY : main.c.i
 
-open_hash_struct.s: open_hash_struct.c.s
-.PHONY : open_hash_struct.s
+main.s: main.c.s
+.PHONY : main.s
 
 # target to generate assembly for a file
-open_hash_struct.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/open_hash_struct.c.s
-.PHONY : open_hash_struct.c.s
+main.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/main.c.s
+.PHONY : main.c.s
 
 # Help Target
 help:
@@ -282,12 +234,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... WordsCounter"
-	@echo "... Tests.o"
-	@echo "... Tests.i"
-	@echo "... Tests.s"
-	@echo "... forward_list.o"
-	@echo "... forward_list.i"
-	@echo "... forward_list.s"
 	@echo "... hash.o"
 	@echo "... hash.i"
 	@echo "... hash.s"
@@ -297,9 +243,9 @@ help:
 	@echo "... hash_table_open.o"
 	@echo "... hash_table_open.i"
 	@echo "... hash_table_open.s"
-	@echo "... open_hash_struct.o"
-	@echo "... open_hash_struct.i"
-	@echo "... open_hash_struct.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 .PHONY : help
 
 

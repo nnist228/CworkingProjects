@@ -1,27 +1,50 @@
-#include "hash_table.h"
-#include "string.h"
+#ifdef CHAIN_TYPE
 #include <stdlib.h>
-enum PURPORSE{FOR_DEL, FOR_INSERT, FOR_SEARCH}; // for special serach function
-// static uint64_t El_count = 0; // counter for elements stored in the table
-f_list* special_search(f_list** table, const uint64_t index, const char* const String, enum PURPORSE purporse);
-list_hash_table alloc_list_table(const uint64_t size);
+#include <string.h>
+#include <stdlib.h>
+#include "hash_table.h"
 
-bool list_hash_table_insert(list_hash_table* table, const uint64_t size, const char *String, uint64_t value)
+struct list{
+    char* String; // String, dynamic alloc!
+    uint64_t value; 
+    struct list* next; 
+};
+
+static list* alloc_list(const char* String, const int value);
+
+static bool remove_list_el(list* prev, list* el);
+
+static void list_clear(list* list);
+
+static void destruct_cur_list(list *list);
+
+static void print_list(list* list);
+
+static void print_list_el(list* el);
+
+
+enum PURPORSE{FOR_DEL, FOR_INSERT, FOR_SEARCH}; // for special serach function
+
+static list* special_search(list** table, const uint64_t index, const char* const String, enum PURPORSE purporse);
+static list** alloc_list_table(const uint64_t size);
+
+bool list_hash_table_insert(list*** table_ptr, const uint64_t size, const char *String, uint64_t value)
 {
-    if(*table == NULL){
-        *table = alloc_list_table(size);
-        if(*table == NULL){
+    list** table = *table;
+    if(table == NULL){
+        table = alloc_list_table(size);
+        if(table == NULL){
             return false;
         }
     }
     const uint64_t index = hash_function(String) % size;
-    f_list* table_el = special_search(*table, index, String, FOR_INSERT);
+    list* table_el = special_search(table, index, String, FOR_INSERT);
     if(table_el == NULL){
-        f_list* temp = alloc_flist(String, value);
+        list* temp = alloc_flist(String, value);
         if(temp == NULL){
             return false;
         }
-        (*table)[index] = temp;
+        table[index] = temp;
         // ++El_count;
         return true;
     }
@@ -29,24 +52,23 @@ bool list_hash_table_insert(list_hash_table* table, const uint64_t size, const c
         table_el->value = value;
         return true;
     } else{
-        f_list* temp = alloc_flist(String, value);
+        list* temp = alloc_flist(String, value);
         if(temp == NULL){
             return false;
         }
         table_el->next = temp;
-        // ++El_count;
         return true;
     }
     return false;
 }
 
-bool list_hash_table_delete(list_hash_table table, const uint64_t size, const char *const String)
+bool list_hash_table_delete(list** table, const uint64_t size, const char *const String)
 {
     if(table == NULL){
         return false;
     }
     const uint64_t index = hash_function(String) % size;
-    f_list* prev_el = special_search(table, index, String, FOR_DEL);
+    list* prev_el = special_search(table, index, String, FOR_DEL);
     if(prev_el == NULL){
         return NULL;
     }
@@ -56,17 +78,19 @@ bool list_hash_table_delete(list_hash_table table, const uint64_t size, const ch
     return remove_flist_el(prev_el, prev_el->next);
 }
 
-list_hash_table_el list_hash_table_search(list_hash_table table, const uint64_t size, const char* const String)
+uint64_t* list_hash_table_search(list** table, const uint64_t size, const char* const String)
 {
     if(table == NULL){
         return NULL;
     }
     const uint64_t index = hash_function(String) % size;
-    f_list* table_el = special_search(table, index, String, FOR_SEARCH);
-    return table_el;
+    list* table_el = special_search(table, index, String, FOR_SEARCH);
+    if(table_el != NULL)
+    return &table_el->value;
+    return NULL;
 }
 
-void list_hash_table_print(list_hash_table table, const uint64_t size)
+void list_hash_table_print(list** table, const uint64_t size)
 {
     if(table == NULL)
         return;
@@ -78,16 +102,16 @@ void list_hash_table_print(list_hash_table table, const uint64_t size)
 }
 
 
-f_list* special_search(f_list** table, const uint64_t index, const char* const String, enum PURPORSE purporse)
+list* special_search(list** table, const uint64_t index, const char* const String, enum PURPORSE purporse)
 {
-    f_list* element = table[index];
+    list* element = table[index];
     if(element == NULL){
         return NULL;
     }
     switch(purporse){
         case FOR_DEL:
             {
-                f_list* prev = element;
+                list* prev = element;
                 while(element != NULL){
                     if(strcmp(element->String,String) == 0){
                         return prev;
@@ -125,10 +149,79 @@ f_list* special_search(f_list** table, const uint64_t index, const char* const S
     }
 }
 
-list_hash_table alloc_list_table(const uint64_t size)
+list** alloc_list_table(const uint64_t size)
 {
-    list_hash_table temp = (list_hash_table) malloc(size * sizeof(f_list*));
+    list** temp = (list**) malloc(size * sizeof(list*));
     return temp;
 }
 
 
+list* alloc_list(const char * String, const int value) // dynamic alloc! String is also dynamically allocated
+{
+    list* temp = (list*) malloc(sizeof(list));
+    if(temp == NULL){
+        return NULL;
+    }
+    temp->String = (char*) calloc(strlen(String), sizeof(char));
+    if(temp->String == NULL){
+        free(temp);
+        return NULL;
+    }
+    strcpy(temp->String, String);
+    temp->value = value;
+    temp->next = NULL;
+    return temp;
+}
+
+bool remove_list_el(list *prev, list* el)
+{   
+    if(el == NULL){
+       return false; 
+    }
+    if(prev == NULL){
+        destruct_cur_list(el);
+        return true;
+    }
+    if(prev->next == el){
+        list* temp = el->next;
+        destruct_cur_list(el);
+        prev->next = temp;
+        return true;
+    }
+    return false;
+}
+
+void list_clear(list *el) // remove all elements
+{
+    list* temp = el;
+    while(el != NULL){
+        el = el->next;
+        destruct_cur_list(temp);
+        temp = el;
+    }
+}
+
+void destruct_cur_list(list *list){ // destruct the element
+    if(list != NULL){
+        if(list->String != NULL)
+            free(list->String);
+         free(list);
+    }
+}
+
+void print_flist(list* list){ // print all possible elements
+    if(list){
+        while(list != NULL){
+            printf("Key: %s Value: %llu\n", list->String, list->value);
+            list = list->next;
+        }
+    }
+}
+
+void print_list_el(list* el){ // print one element per call
+    if(el){
+        printf("Key: %s Value: %llu\n", el->String, el->value);
+    }
+}
+
+#endif

@@ -1,7 +1,7 @@
-#include "hash_table.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "hash_table.h"
 
 int main(int argc, char** argv){
     
@@ -21,19 +21,19 @@ int main(int argc, char** argv){
         fprintf(stderr, "File %s can not be opened\n", argv[1]);
         exit(EXIT_FAILURE);
     }
-    open_hash_table table = NULL;
+    list** table = NULL;
     char String[1024];
-    uint64_t size = TABLE_SIZE;
+    uint64_t size = 1021;
     while(fscanf(src_file, "%1024s", String) != EOF){
-        open_hash_table_el el = open_hash_table_search(table, size, String);
+        uint64_t* el = hash_table_search(table, size, String);
         if(el == NULL){
-            open_hash_table_insert(&table, size, String, 1);
+            hash_table_insert(&table, size, String, 1);
         } else{
-            el->value += 1;
+            *el += 1;
         }
     }
 
-    open_hash_table_print(table, size);
+    hash_table_print(table, size);
 
     return 0;
 }
