@@ -1,3 +1,0 @@
-/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles/WordsCounter.dir
-/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles/edit_cache.dir
-/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles/rebuild_cache.dir
