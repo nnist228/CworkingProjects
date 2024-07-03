@@ -153,53 +153,29 @@ hash.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash.c.s
 .PHONY : hash.c.s
 
-hash_table_list.o: hash_table_list.c.o
-.PHONY : hash_table_list.o
+hash_table.o: hash_table.c.o
+.PHONY : hash_table.o
 
 # target to build an object file
-hash_table_list.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table_list.c.o
-.PHONY : hash_table_list.c.o
+hash_table.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table.c.o
+.PHONY : hash_table.c.o
 
-hash_table_list.i: hash_table_list.c.i
-.PHONY : hash_table_list.i
-
-# target to preprocess a source file
-hash_table_list.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table_list.c.i
-.PHONY : hash_table_list.c.i
-
-hash_table_list.s: hash_table_list.c.s
-.PHONY : hash_table_list.s
-
-# target to generate assembly for a file
-hash_table_list.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table_list.c.s
-.PHONY : hash_table_list.c.s
-
-hash_table_open.o: hash_table_open.c.o
-.PHONY : hash_table_open.o
-
-# target to build an object file
-hash_table_open.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table_open.c.o
-.PHONY : hash_table_open.c.o
-
-hash_table_open.i: hash_table_open.c.i
-.PHONY : hash_table_open.i
+hash_table.i: hash_table.c.i
+.PHONY : hash_table.i
 
 # target to preprocess a source file
-hash_table_open.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table_open.c.i
-.PHONY : hash_table_open.c.i
+hash_table.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table.c.i
+.PHONY : hash_table.c.i
 
-hash_table_open.s: hash_table_open.c.s
-.PHONY : hash_table_open.s
+hash_table.s: hash_table.c.s
+.PHONY : hash_table.s
 
 # target to generate assembly for a file
-hash_table_open.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table_open.c.s
-.PHONY : hash_table_open.c.s
+hash_table.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/WordsCounter.dir/build.make CMakeFiles/WordsCounter.dir/hash_table.c.s
+.PHONY : hash_table.c.s
 
 main.o: main.c.o
 .PHONY : main.o
@@ -237,12 +213,9 @@ help:
 	@echo "... hash.o"
 	@echo "... hash.i"
 	@echo "... hash.s"
-	@echo "... hash_table_list.o"
-	@echo "... hash_table_list.i"
-	@echo "... hash_table_list.s"
-	@echo "... hash_table_open.o"
-	@echo "... hash_table_open.i"
-	@echo "... hash_table_open.s"
+	@echo "... hash_table.o"
+	@echo "... hash_table.i"
+	@echo "... hash_table.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

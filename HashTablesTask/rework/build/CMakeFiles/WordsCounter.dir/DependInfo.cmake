@@ -9,8 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/alex/Projects/C/HashTablesTask/rework/hash.c" "CMakeFiles/WordsCounter.dir/hash.c.o" "gcc" "CMakeFiles/WordsCounter.dir/hash.c.o.d"
-  "/home/alex/Projects/C/HashTablesTask/rework/hash_table_list.c" "CMakeFiles/WordsCounter.dir/hash_table_list.c.o" "gcc" "CMakeFiles/WordsCounter.dir/hash_table_list.c.o.d"
-  "/home/alex/Projects/C/HashTablesTask/rework/hash_table_open.c" "CMakeFiles/WordsCounter.dir/hash_table_open.c.o" "gcc" "CMakeFiles/WordsCounter.dir/hash_table_open.c.o.d"
+  "/home/alex/Projects/C/HashTablesTask/rework/hash_table.c" "CMakeFiles/WordsCounter.dir/hash_table.c.o" "gcc" "CMakeFiles/WordsCounter.dir/hash_table.c.o.d"
   "/home/alex/Projects/C/HashTablesTask/rework/main.c" "CMakeFiles/WordsCounter.dir/main.c.o" "gcc" "CMakeFiles/WordsCounter.dir/main.c.o.d"
   )
 

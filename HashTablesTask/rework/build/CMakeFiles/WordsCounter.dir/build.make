@@ -83,38 +83,24 @@ CMakeFiles/WordsCounter.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/WordsCounter.dir/main.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/alex/Projects/C/HashTablesTask/rework/main.c -o CMakeFiles/WordsCounter.dir/main.c.s
 
-CMakeFiles/WordsCounter.dir/hash_table_open.c.o: CMakeFiles/WordsCounter.dir/flags.make
-CMakeFiles/WordsCounter.dir/hash_table_open.c.o: ../hash_table_open.c
-CMakeFiles/WordsCounter.dir/hash_table_open.c.o: CMakeFiles/WordsCounter.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/WordsCounter.dir/hash_table_open.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/WordsCounter.dir/hash_table_open.c.o -MF CMakeFiles/WordsCounter.dir/hash_table_open.c.o.d -o CMakeFiles/WordsCounter.dir/hash_table_open.c.o -c /home/alex/Projects/C/HashTablesTask/rework/hash_table_open.c
+CMakeFiles/WordsCounter.dir/hash_table.c.o: CMakeFiles/WordsCounter.dir/flags.make
+CMakeFiles/WordsCounter.dir/hash_table.c.o: ../hash_table.c
+CMakeFiles/WordsCounter.dir/hash_table.c.o: CMakeFiles/WordsCounter.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/WordsCounter.dir/hash_table.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/WordsCounter.dir/hash_table.c.o -MF CMakeFiles/WordsCounter.dir/hash_table.c.o.d -o CMakeFiles/WordsCounter.dir/hash_table.c.o -c /home/alex/Projects/C/HashTablesTask/rework/hash_table.c
 
-CMakeFiles/WordsCounter.dir/hash_table_open.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/WordsCounter.dir/hash_table_open.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/alex/Projects/C/HashTablesTask/rework/hash_table_open.c > CMakeFiles/WordsCounter.dir/hash_table_open.c.i
+CMakeFiles/WordsCounter.dir/hash_table.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/WordsCounter.dir/hash_table.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/alex/Projects/C/HashTablesTask/rework/hash_table.c > CMakeFiles/WordsCounter.dir/hash_table.c.i
 
-CMakeFiles/WordsCounter.dir/hash_table_open.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/WordsCounter.dir/hash_table_open.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/alex/Projects/C/HashTablesTask/rework/hash_table_open.c -o CMakeFiles/WordsCounter.dir/hash_table_open.c.s
-
-CMakeFiles/WordsCounter.dir/hash_table_list.c.o: CMakeFiles/WordsCounter.dir/flags.make
-CMakeFiles/WordsCounter.dir/hash_table_list.c.o: ../hash_table_list.c
-CMakeFiles/WordsCounter.dir/hash_table_list.c.o: CMakeFiles/WordsCounter.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/WordsCounter.dir/hash_table_list.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/WordsCounter.dir/hash_table_list.c.o -MF CMakeFiles/WordsCounter.dir/hash_table_list.c.o.d -o CMakeFiles/WordsCounter.dir/hash_table_list.c.o -c /home/alex/Projects/C/HashTablesTask/rework/hash_table_list.c
-
-CMakeFiles/WordsCounter.dir/hash_table_list.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/WordsCounter.dir/hash_table_list.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/alex/Projects/C/HashTablesTask/rework/hash_table_list.c > CMakeFiles/WordsCounter.dir/hash_table_list.c.i
-
-CMakeFiles/WordsCounter.dir/hash_table_list.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/WordsCounter.dir/hash_table_list.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/alex/Projects/C/HashTablesTask/rework/hash_table_list.c -o CMakeFiles/WordsCounter.dir/hash_table_list.c.s
+CMakeFiles/WordsCounter.dir/hash_table.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/WordsCounter.dir/hash_table.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/alex/Projects/C/HashTablesTask/rework/hash_table.c -o CMakeFiles/WordsCounter.dir/hash_table.c.s
 
 CMakeFiles/WordsCounter.dir/hash.c.o: CMakeFiles/WordsCounter.dir/flags.make
 CMakeFiles/WordsCounter.dir/hash.c.o: ../hash.c
 CMakeFiles/WordsCounter.dir/hash.c.o: CMakeFiles/WordsCounter.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/WordsCounter.dir/hash.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/WordsCounter.dir/hash.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/WordsCounter.dir/hash.c.o -MF CMakeFiles/WordsCounter.dir/hash.c.o.d -o CMakeFiles/WordsCounter.dir/hash.c.o -c /home/alex/Projects/C/HashTablesTask/rework/hash.c
 
 CMakeFiles/WordsCounter.dir/hash.c.i: cmake_force
@@ -128,20 +114,18 @@ CMakeFiles/WordsCounter.dir/hash.c.s: cmake_force
 # Object files for target WordsCounter
 WordsCounter_OBJECTS = \
 "CMakeFiles/WordsCounter.dir/main.c.o" \
-"CMakeFiles/WordsCounter.dir/hash_table_open.c.o" \
-"CMakeFiles/WordsCounter.dir/hash_table_list.c.o" \
+"CMakeFiles/WordsCounter.dir/hash_table.c.o" \
 "CMakeFiles/WordsCounter.dir/hash.c.o"
 
 # External object files for target WordsCounter
 WordsCounter_EXTERNAL_OBJECTS =
 
 WordsCounter: CMakeFiles/WordsCounter.dir/main.c.o
-WordsCounter: CMakeFiles/WordsCounter.dir/hash_table_open.c.o
-WordsCounter: CMakeFiles/WordsCounter.dir/hash_table_list.c.o
+WordsCounter: CMakeFiles/WordsCounter.dir/hash_table.c.o
 WordsCounter: CMakeFiles/WordsCounter.dir/hash.c.o
 WordsCounter: CMakeFiles/WordsCounter.dir/build.make
 WordsCounter: CMakeFiles/WordsCounter.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable WordsCounter"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/alex/Projects/C/HashTablesTask/rework/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable WordsCounter"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/WordsCounter.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

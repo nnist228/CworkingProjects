@@ -29,12 +29,8 @@ CMakeFiles/WordsCounter.dir/hash.c.o
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h
  /usr/include/strings.h
 
-CMakeFiles/WordsCounter.dir/hash_table_list.c.o
- /home/alex/Projects/C/HashTablesTask/rework/hash_table_list.c
- /usr/include/stdc-predef.h
-
-CMakeFiles/WordsCounter.dir/hash_table_open.c.o
- /home/alex/Projects/C/HashTablesTask/rework/hash_table_open.c
+CMakeFiles/WordsCounter.dir/hash_table.c.o
+ /home/alex/Projects/C/HashTablesTask/rework/hash_table.c
  /usr/include/stdc-predef.h
  /usr/include/string.h
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h

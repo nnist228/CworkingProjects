@@ -218,8 +218,8 @@ Hash_Tables_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 Hash_Tables_SOURCE_DIR:STATIC=/home/alex/Projects/C/HashTablesTask/rework
 
-//No help, variable specified on the command line.
-OPEN_TYPE:STRING=True
+//ON for open type table OFF for chaining type table
+OPEN_TYPE:BOOL=OFF
 
 
 ########################

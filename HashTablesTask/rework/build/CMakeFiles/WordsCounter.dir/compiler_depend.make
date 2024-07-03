@@ -28,10 +28,7 @@ CMakeFiles/WordsCounter.dir/hash.c.o: ../hash.c \
   /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /usr/include/strings.h
 
-CMakeFiles/WordsCounter.dir/hash_table_list.c.o: ../hash_table_list.c \
-  /usr/include/stdc-predef.h
-
-CMakeFiles/WordsCounter.dir/hash_table_open.c.o: ../hash_table_open.c \
+CMakeFiles/WordsCounter.dir/hash_table.c.o: ../hash_table.c \
   /usr/include/stdc-predef.h \
   /usr/include/string.h \
   /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
@@ -180,10 +177,6 @@ CMakeFiles/WordsCounter.dir/main.c.o: ../main.c \
 
 /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
-
-../hash_table_list.c:
-
 /usr/include/strings.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn-common.h:
@@ -198,17 +191,19 @@ CMakeFiles/WordsCounter.dir/main.c.o: ../main.c \
 
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
-../hash_table_open.c:
-
-../hash.h:
+/usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
+
+../hash_table.c:
 
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
 
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
+
+../hash.h:
 
 /usr/include/inttypes.h:
 
@@ -234,6 +229,8 @@ CMakeFiles/WordsCounter.dir/main.c.o: ../main.c \
 
 /usr/include/alloca.h:
 
+/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
@@ -241,8 +238,6 @@ CMakeFiles/WordsCounter.dir/main.c.o: ../main.c \
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h:
 
 /usr/include/features.h:
-
-/usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitstatus.h:
 

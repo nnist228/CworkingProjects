@@ -2,18 +2,18 @@ cmake_minimum_required(VERSION 3.13)
 project(Hash_Tables)
 
 set(
-    Sources
-    hash_table_open.c
-    hash_table_list.c
+    SOURCES
+    hash_table.c
     hash.c
 )
 
 set (
-    Headers
+    HEADERS
     hash_table.h
     hash.h
 )
-    add_executable(WordsCounter main.c ${Sources} ${Headers})
+    add_executable(WordsCounter main.c ${SOURCES} ${HEADERS})
+    option(OPEN_TYPE "ON for open type table OFF for chaining type table")
     if(OPEN_TYPE)
         target_compile_definitions(WordsCounter PRIVATE OPEN_TYPE)
     else()
