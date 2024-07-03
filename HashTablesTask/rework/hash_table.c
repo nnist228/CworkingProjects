@@ -189,7 +189,7 @@ static list* alloc_list(const char *string, const uint64_t value)
         return NULL;
     }
 
-    list* special_search(list** table, const uint64_t index, const char* const string, bool for_insert)
+    static list* special_search(list** table, const uint64_t index, const char* const string, bool for_insert)
     {
         list* element = table[index];
         if(element == NULL){
