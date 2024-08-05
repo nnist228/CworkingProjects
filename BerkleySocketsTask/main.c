@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     hint.ai_protocol = 0;  
 
     struct addrinfo *r_ptr = NULL;
-    int error = getaddrinfo(server_name, 0, &hint, &r_ptr);
+    int error = getaddrinfo(server_name, "telnet", &hint, &r_ptr);
     if(error != 0){
         perror(gai_strerror(error));
         close(sock_fd);
