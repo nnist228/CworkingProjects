@@ -9,10 +9,9 @@
 #include <unistd.h>
 
 
-#define PORT 23
 #define BUF_SIZE 2048
-static char buffer[BUF_SIZE];
-static const char server_name[] = "telehack.com";
+static  char buffer[BUF_SIZE];
+static const  char server_name[] = "telehack.com";
 
 int main(int argc, char** argv)
 {
@@ -40,45 +39,55 @@ int main(int argc, char** argv)
         freeaddrinfo(r_ptr);
         return 4;
     }
-    struct sockaddr_in sock_addr = {0};
-    sock_addr.sin_family = AF_INET;
-    sock_addr.sin_port = htons(PORT);
-    printf("%s\n",  r_ptr->ai_addr->sa_data);
-    int r = inet_pton(AF_INET, r_ptr->ai_addr->sa_data, &sock_addr.sin_addr);
-    freeaddrinfo(r_ptr);
-    if(r <= 0){
-        perror("inet_pton");
-        close(sock_fd);
-        return 5;
-    }
-    if(connect(sock_fd, (struct sockaddr*)&sock_addr, sizeof(sock_addr)) < 0){
+
+    if(connect(sock_fd, r_ptr->ai_addr, r_ptr->ai_addrlen) < 0){
         perror("connect");
         close(sock_fd);
         return 6;
     }
+    freeaddrinfo(r_ptr);
 
-    int len = 0;
-    while((r = recv(sock_fd, &buffer[len], BUF_SIZE - len, 0)) > 0){
-        len += r;
+    size_t len = 0;
+    while((len = recv(sock_fd, buffer, BUF_SIZE, 0)) > 0){
+        if(buffer[len-1] == '.' && buffer[len-2] == '\n'){
+            memset(buffer, '\0', sizeof(buffer));
+            break;
+        }
+        memset(buffer, '\0', sizeof(buffer));
     }
-
-    char string_command[512] = "figlet /";
+    
+    char string_command[BUF_SIZE] = "figlet /";
     strcat(string_command, argv[1]);
     strcat(string_command, " ");
-    strcat(string_command, argv[2]);
-
-    if(send(sock_fd, string_command, strlen(string_command), 0) < 0){
-        perror("send");
-        shutdown(sock_fd, SHUT_RDWR);
-        close(sock_fd);
-        return 8;
+    size_t offset = strlen(string_command);
+    size_t length = 0;
+    while(length < strlen(argv[2])){
+        len = BUF_SIZE - offset - 2;
+        strncat(string_command, argv[2] + length , len);
+        length += len;
+        strcat(string_command, "\r\n");
+        size_t command_size = strlen(string_command);
+        if(send(sock_fd, string_command, command_size + 1, 0) < 0){
+            perror("send");
+            shutdown(sock_fd, SHUT_RDWR);
+            close(sock_fd);
+            return 8;
+        }
+        len = 0;
+        while((len = recv(sock_fd, buffer, BUF_SIZE, 0)) > 0){
+            if(buffer[len-1] == '.' && buffer[len-2] == '\n'){
+                buffer[len-2] = '\0';
+                printf("%s", buffer + command_size);
+                memset(buffer, '\0', sizeof(buffer));
+                break;
+            }
+            printf("%s", buffer + command_size);
+            memset(buffer, '\0', sizeof(buffer));
+            command_size = 0;
+        }
+        memset(string_command + offset, '\0', sizeof(string_command) - offset);
     }
-
-    len = 0;
-    while((r = recv(sock_fd, &buffer[len], BUF_SIZE - len, 0)) > 0){
-        printf("%s", buffer + len);
-        len += r;
-    }
+    
     shutdown(sock_fd, SHUT_RDWR);
     close(sock_fd);
 
