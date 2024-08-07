@@ -1,3 +1,0 @@
-/home/alex/Projects/C/CworkingProjects/BerkleySocketsTask/build/CMakeFiles/BSoc.dir
-/home/alex/Projects/C/CworkingProjects/BerkleySocketsTask/build/CMakeFiles/edit_cache.dir
-/home/alex/Projects/C/CworkingProjects/BerkleySocketsTask/build/CMakeFiles/rebuild_cache.dir
