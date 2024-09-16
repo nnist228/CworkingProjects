@@ -10,16 +10,15 @@
 #include <sys/types.h>
 #include <sys/epoll.h>
 #include <unistd.h>
-
-static char buffer[2048];
-#define MAX_EPOLL_EVENTS 128
+#define BUFSIZE 2048
+#define MAX_EPOLL_EVENTS 128    
+static char buffer[BUFSIZE];   
 static struct epoll_event events[MAX_EPOLL_EVENTS];
-#define BACKLOG 128
 
 int setnonblocking(int sock)
 {
     int flags = fcntl(sock, F_GETFL, 0);
-    if (opts < 0)
+    if (flags < 0)
     {
         perror("fcntl(F_GETFL)");
         return -1;
@@ -65,10 +64,7 @@ int main(int argc, char** argv)
     }
 
     setnonblocking(listenfd);
-    struct sockaddr_in servaddr = {0};
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(port);
+    struct sockaddr_in servaddr = {.sin_family = AF_INET, .sin_addr.s_addr = htonl(INADDR_ANY), .sin_port = htons(port)};
 
     if (bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0)
     {
@@ -76,15 +72,13 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
-    if (listen(listenfd, BACKLOG) < 0)
+    if (listen(listenfd, MAX_EPOLL_EVENTS) < 0)
     {
         perror("listen");
         return EXIT_FAILURE;
     }
 
-    struct epoll_event listenev;
-    listenev.events = EPOLLIN | EPOLLET;
-    listenev.data.fd = listenfd;
+    struct epoll_event listenev = {.events = EPOLLIN | EPOLLET, .data.fd = listenfd};
 
     if (epoll_ctl(efd, EPOLL_CTL_ADD, listenfd, &listenev) < 0)
     {
@@ -92,7 +86,6 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
     struct epoll_event connev;
-    int events_count = 1;
 
     for (;;)
     {
@@ -103,69 +96,67 @@ int main(int argc, char** argv)
         }
         for (int i = 0; i < nfds; i++)
         {
-            if ((!(events[i].events & EPOLLIN)) || (!(events[i].events & EPOLLOUT))) 
+            if((events[i].events & EPOLLERR) || (events[i].events & EPOLLRDHUP))
             {
                 fprintf(stderr, "epoll error\n");
                 close(events[i].data.fd);
                 continue;
             }
-            if (events[i].data.fd == listenfd)
-            {
-                for(;;){
-                    int connfd = accept(listenfd, 0, 0);
-                    if (connfd < 0)
-                    {
-                        if (errno == EAGAIN || errno == EWOULDBLOCK) {
-                            break;
-                        } else {
+            if(events[i].events & EPOLLIN){
+                if (events[i].data.fd == listenfd)
+                {
+                    for(;;){
+                        int connfd = accept(listenfd, 0, 0);
+                        if (connfd < 0)
+                        {
+                            if (errno == EAGAIN || errno == EWOULDBLOCK) {
+                                break;
+                            }
                             perror("accept()");
-                            return 1;
+                            continue; //здесь нужно крашиться или норм?
+                        }
+                        setnonblocking(connfd);
+                        connev.data.fd = connfd;
+                        connev.events = EPOLLIN | EPOLLOUT | EPOLLET | EPOLLERR | EPOLLRDHUP;
+                        if (epoll_ctl(efd, EPOLL_CTL_ADD, connfd, &connev) < 0)
+                        {
+                            perror("epoll_ctl");
+                            close(connfd);
+                            return 2;
                         }
                     }
-                    if (events_count == MAX_EPOLL_EVENTS-1)
-                    {
-                        printf("Event array is full\n");
-                        close(connfd);
-                        break;
-                    }
-                    setnonblocking(connfd);
-                    connev.data.fd = connfd;
-                    connev.events = EPOLLIN | EPOLLOUT;
-                    if (epoll_ctl(efd, EPOLL_CTL_ADD, connfd, &connev) < 0)
-                    {
-                        perror("epoll_ctl");
-                        close(connfd);
-                        return 2;
-                    }
-                    events_count++;
                 }
-            }
-            else
-            {
-                int fd = events[i].data.fd;
-                for(;;){
-                    int rc = read(fd, buffer, sizeof(buffer));
-                    if (rc < 0)
-                    {
-                        if(errno == EAGAIN || errno == EWOULDBLOCK) {
-                            break;
-                        } else {
-                            perror("read()");
-                            return 3;
+                else
+                {
+                    int fd, rc; 
+                    fear: // страх оставить хвостик
+                    fd = events[i].data.fd;
+                    rc = read(fd, buffer, sizeof(buffer));
+                    if(rc < 0){
+                        if(errno == EAGAIN || errno == EWOULDBLOCK){
+                            continue;
                         }
-                    } else if (rc == 0) {
-                        epoll_ctl(efd, EPOLL_CTL_DEL, fd, &connev);
-                        close(fd);
-                        events_count--;
-                        break;
-                    } else {
+                        perror("write");
+                        goto cleanup;
+                    } else if(rc == 0){ // ну потому что errno обновляется только при появлении ошибки, так бы считывали старое значение
+                        continue;
+                    } else{
                         rc = send(fd, buffer, rc, 0);
                         if (rc < 0)
                         {
+                            if(errno == EAGAIN || errno == EWOULDBLOCK){
+                                continue;
+                            }
                             perror("write");
-                            return 4;
+                            goto cleanup;
                         }
+                        if(rc >= BUFSIZE) // а вдруг там что-то еще
+                            goto fear;
+                        continue;
                     }
+                    cleanup:
+                        epoll_ctl(efd, EPOLL_CTL_DEL, fd, &connev);
+                        close(fd);
                 }
             }
         }
