@@ -10,87 +10,32 @@
 #include <sys/types.h>
 #include <sys/epoll.h>
 #include <unistd.h>
-static char buffer[2048];
 
+static char buffer[2048];
+#define MAX_EPOLL_EVENTS 128
+static struct epoll_event events[MAX_EPOLL_EVENTS];
+#define BACKLOG 128
 
 int setnonblocking(int sock)
 {
-    int opts;
-    opts = fcntl(sock,F_GETFL);
+    int flags = fcntl(sock, F_GETFL, 0);
     if (opts < 0)
     {
-    perror("fcntl(F_GETFL)");
-    return -1;
+        perror("fcntl(F_GETFL)");
+        return -1;
     }
-    opts = (opts | O_NONBLOCK);
-    if (fcntl(sock,F_SETFL,opts) < 0)
+    if (fcntl(sock,F_SETFL, flags | O_NONBLOCK) < 0)
     {
-    perror("fcntl(F_SETFL)");
-    return -1;
+        perror("fcntl(F_SETFL)");
+        return -1;
     }
     return 0;
 }
-
-void echo(int fd){
-    for(;;){
-        int rc = recv(fd, buffer, sizeof(buffer), 0);
-        if (rc < 0)
-        {
-            if(errno == EAGAIN || errno == EWOULDBLOCK) {
-              break;
-            } else {
-              perror("read()");
-              return;
-            }
-        } else if (rc == 0) {
-            close(rc);
-            break;
-        } else {
-            rc = send(fd, buffer, sizeof(buffer), 0);
-            if (rc < 0)
-            {
-                perror("write");
-                return;
-            }
-        }
-    }
-}
-
-#if 0
-void do_read(int fd)
-{
-    int rc = recv(fd, buffer, sizeof(buffer), 0);
-    if (rc < 0)
-    {
-        perror("read");
-        return;
-    }
-    buffer[rc] = 0;
-    printf("read: %s\n", buffer);
-    }
-#endif
-#if 0
-void do_write(int fd)
-{
-    static const char* greeting = "O hai!\n";
-    int rc = send(fd, greeting, strlen(greeting), 0);
-    if (rc < 0)
-    {
-        perror("write");
-        return;
-    }
-}
-#endif 
 
 void process_error(int fd)
 {
     printf("fd %d error!\n", fd);
 }
-
-#define MAX_EPOLL_EVENTS 128
-static struct epoll_event events[MAX_EPOLL_EVENTS];
-#define BACKLOG 128
-
 
 int main(int argc, char** argv)
 {
@@ -158,8 +103,7 @@ int main(int argc, char** argv)
         }
         for (int i = 0; i < nfds; i++)
         {
-            if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP) ||
-                (!(events[i].events & EPOLLIN)) || (!(events[i].events & EPOLLOUT))) 
+            if ((!(events[i].events & EPOLLIN)) || (!(events[i].events & EPOLLOUT))) 
             {
                 fprintf(stderr, "epoll error\n");
                 close(events[i].data.fd);
@@ -168,9 +112,7 @@ int main(int argc, char** argv)
             if (events[i].data.fd == listenfd)
             {
                 for(;;){
-                    struct sockaddr in_addr;
-                    socklen_t in_addr_len = sizeof(in_addr);
-                    int connfd = accept(listenfd, &in_addr, &in_addr_len);
+                    int connfd = accept(listenfd, 0, 0);
                     if (connfd < 0)
                     {
                         if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -184,16 +126,16 @@ int main(int argc, char** argv)
                     {
                         printf("Event array is full\n");
                         close(connfd);
-                        continue;
+                        break;
                     }
                     setnonblocking(connfd);
                     connev.data.fd = connfd;
-                    connev.events = EPOLLIN | EPOLLOUT /*| EPOLLET | EPOLLRDHUP*/;
+                    connev.events = EPOLLIN | EPOLLOUT;
                     if (epoll_ctl(efd, EPOLL_CTL_ADD, connfd, &connev) < 0)
                     {
                         perror("epoll_ctl");
                         close(connfd);
-                        return 1;
+                        return 2;
                     }
                     events_count++;
                 }
@@ -201,17 +143,30 @@ int main(int argc, char** argv)
             else
             {
                 int fd = events[i].data.fd;
-                if (events[i].events & EPOLLIN & EPOLLOUT)
-                    echo(fd);
-                #if 0
-                if (events[i].events & EPOLLOUT)
-                do_write(fd);
-                if (events[i].events & EPOLLRDHUP)
-                process_error(fd);
-                epoll_ctl(efd, EPOLL_CTL_DEL, fd, &connev);
-                close(fd);
-                events_count--;
-                #endif
+                for(;;){
+                    int rc = read(fd, buffer, sizeof(buffer));
+                    if (rc < 0)
+                    {
+                        if(errno == EAGAIN || errno == EWOULDBLOCK) {
+                            break;
+                        } else {
+                            perror("read()");
+                            return 3;
+                        }
+                    } else if (rc == 0) {
+                        epoll_ctl(efd, EPOLL_CTL_DEL, fd, &connev);
+                        close(fd);
+                        events_count--;
+                        break;
+                    } else {
+                        rc = send(fd, buffer, rc, 0);
+                        if (rc < 0)
+                        {
+                            perror("write");
+                            return 4;
+                        }
+                    }
+                }
             }
         }
     }
