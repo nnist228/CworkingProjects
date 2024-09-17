@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <errno.h>
+#include <stdbool.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <arpa/inet.h>
@@ -14,6 +16,22 @@
 #define MAX_EPOLL_EVENTS 128    
 static char buffer[BUFSIZE];   
 static struct epoll_event events[MAX_EPOLL_EVENTS];
+static const size_t error_lenght = sizeof("Invalid number! One number per time, please");
+
+struct user_data{
+    int fd;
+    long count;
+    long sum;
+};
+
+bool string_validation(char* string, int size){
+    for(int i = (string[0] == '-') ? 1 : 0; i < size; i++){
+        if(!isdigit(string[i])){
+            return false;
+        }
+    }
+    return true;
+}
 
 int setnonblocking(int sock)
 {
@@ -35,6 +53,7 @@ void process_error(int fd)
 {
     printf("fd %d error!\n", fd);
 }
+
 
 int main(int argc, char** argv)
 {
@@ -78,35 +97,42 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
-    struct epoll_event listenev = {.events = EPOLLIN | EPOLLET, .data.fd = listenfd};
-
+    struct user_data* server_ptr = (struct user_data*) malloc(sizeof(struct user_data));
+    if(!server_ptr){
+        perror("Malloc fails 1");
+        return 1;
+    }
+    server_ptr->fd = listenfd;
+    struct epoll_event listenev = {.events = EPOLLIN | EPOLLET, .data.ptr = (void*) server_ptr};
     if (epoll_ctl(efd, EPOLL_CTL_ADD, listenfd, &listenev) < 0)
     {
         perror("epoll_ctl");
         return EXIT_FAILURE;
     }
-    struct epoll_event connev;
-
     for (;;)
     {
         int nfds = epoll_wait(efd, events, MAX_EPOLL_EVENTS, -1);
         if (nfds == -1) {
             perror("epoll_wait()");
-            return 1;
+            return 2;
         }
         for (int i = 0; i < nfds; i++)
         {
-            if((events[i].events & EPOLLERR) || (events[i].events & EPOLLRDHUP))
+            struct epoll_event* connev = &events[i];
+            struct user_data* ptr = (struct user_data*) connev->data.ptr;
+            if((connev->events & EPOLLERR) || (connev->events & EPOLLRDHUP))
             {
                 fprintf(stderr, "epoll error\n");
-                close(events[i].data.fd);
+                epoll_ctl(efd, EPOLL_CTL_DEL, ptr->fd, connev);
+                close(ptr->fd);
+                free(ptr);
                 continue;
             }
-            if(events[i].events & EPOLLIN){
-                if (events[i].data.fd == listenfd)
+            if(connev->events & EPOLLIN){
+                if (ptr->fd == listenfd)
                 {
                     for(;;){
-                        int connfd = accept(listenfd, 0, 0);
+                        int connfd = accept(listenfd, 0, 0); 
                         if (connfd < 0)
                         {
                             if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -116,22 +142,29 @@ int main(int argc, char** argv)
                             continue; //здесь нужно крашиться или норм?
                         }
                         setnonblocking(connfd);
-                        connev.data.fd = connfd;
-                        connev.events = EPOLLIN | EPOLLOUT | EPOLLET | EPOLLERR | EPOLLRDHUP;
-                        if (epoll_ctl(efd, EPOLL_CTL_ADD, connfd, &connev) < 0)
+                        ptr = (struct user_data*) malloc(sizeof(struct user_data));
+                        if(!ptr){
+                            perror("Malloc fails 2");
+                            return 3;
+                        }
+                        ptr->fd = connfd;
+                        ptr->sum = 0;
+                        ptr->count = 0;
+                        connev->data.ptr = (void*) ptr;
+                        connev->events = EPOLLIN | EPOLLET | EPOLLERR | EPOLLRDHUP;
+                        if (epoll_ctl(efd, EPOLL_CTL_ADD, connfd, connev) < 0)
                         {
                             perror("epoll_ctl");
                             close(connfd);
-                            return 2;
+                            return 4;
                         }
                     }
                 }
                 else
                 {
-                    int fd, rc; 
-                    fear: // страх оставить хвостик
-                    fd = events[i].data.fd;
-                    rc = read(fd, buffer, sizeof(buffer));
+                    int rc;
+                    fear: // страх оставить хвостик, неактуально в данной задаче
+                    rc = read(ptr->fd, buffer, sizeof(buffer));
                     if(rc < 0){
                         if(errno == EAGAIN || errno == EWOULDBLOCK){
                             continue;
@@ -141,25 +174,46 @@ int main(int argc, char** argv)
                     } else if(rc == 0){ // ну потому что errno обновляется только при появлении ошибки, так бы считывали старое значение
                         continue;
                     } else{
-                        rc = send(fd, buffer, rc, 0);
-                        if (rc < 0)
-                        {
-                            if(errno == EAGAIN || errno == EWOULDBLOCK){
-                                continue;
+                        if(string_validation(buffer, rc)){ //ВСЕГДА false wtf?
+                            long new_number = atol(buffer);
+                            ptr->count += 1;
+                            ptr->sum += new_number;
+                            double mean = (double)ptr->sum / ptr->count;
+                            int back = sprintf(buffer, "%lf\n", mean);
+                            back = send(ptr->fd, buffer, back, 0);
+                            if (back < 0)
+                            {
+                                if(errno == EAGAIN || errno == EWOULDBLOCK){
+                                    continue;
+                                }
+                                perror("write");
+                                goto cleanup;
                             }
-                            perror("write");
-                            goto cleanup;
+                            if(rc >= BUFSIZE) // а вдруг там что-то еще, неактуально в данной задаче
+                                goto fear;
+                            continue;
+                        } else{
+                            rc = send(ptr->fd, "Invalid number! One number per time, please", error_lenght, 0);
+                            if (rc < 0)
+                            {
+                                if(errno == EAGAIN || errno == EWOULDBLOCK){
+                                    continue;
+                                }
+                                perror("write on invalid input");
+                                goto cleanup;
+                            }
+                            continue;
                         }
-                        if(rc >= BUFSIZE) // а вдруг там что-то еще
-                            goto fear;
-                        continue;
+                        cleanup:
+                            epoll_ctl(efd, EPOLL_CTL_DEL, ptr->fd, connev);
+                            close(ptr->fd);
+                            free(ptr);
                     }
-                    cleanup:
-                        epoll_ctl(efd, EPOLL_CTL_DEL, fd, &connev);
-                        close(fd);
                 }
             }
         }
     }
+    close(listenfd);
+    free(server_ptr);
     return 0;
 }
