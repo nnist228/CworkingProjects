@@ -12,11 +12,12 @@
 #include <sys/types.h>
 #include <sys/epoll.h>
 #include <unistd.h>
+#include <math.h>
 #define BUFSIZE 2048
 #define MAX_EPOLL_EVENTS 128    
 static char buffer[BUFSIZE];   
 static struct epoll_event events[MAX_EPOLL_EVENTS];
-static const size_t error_lenght = sizeof("Invalid number! One number per time, please");
+static const char error_string[] = "Invalid number! One number per time, please";
 
 struct user_data{
     int fd;
@@ -25,11 +26,20 @@ struct user_data{
 };
 
 bool string_validation(char* string, int size){
-    for(int i = (string[0] == '-') ? 1 : 0; i < size; i++){
-        if(!isdigit(string[i])){
-            return false;
-        }
-    }
+    char* end = NULL;
+    printf("%s %ld\n", string, strlen(string));
+    //char* temp = string;
+    //for(; !isspace(*temp); ++temp);
+//	*temp = 0;
+
+    double val = strtod(string, &end);
+    if(val == HUGE_VAL)
+	    return false;
+    for(char* temp = end; temp < string + size; ++temp)
+    {
+	    if(!isspace(*temp))
+		  return false;
+	}
     return true;
 }
 
@@ -175,10 +185,10 @@ int main(int argc, char** argv)
                         continue;
                     } else{
                         if(string_validation(buffer, rc)){ //ВСЕГДА false wtf?
-                            long new_number = atol(buffer);
+                            double new_number = atof(buffer);
                             ptr->count += 1;
                             ptr->sum += new_number;
-                            double mean = (double)ptr->sum / ptr->count;
+                            double mean = ptr->sum / ptr->count;
                             int back = sprintf(buffer, "%lf\n", mean);
                             back = send(ptr->fd, buffer, back, 0);
                             if (back < 0)
@@ -193,7 +203,7 @@ int main(int argc, char** argv)
                                 goto fear;
                             continue;
                         } else{
-                            rc = send(ptr->fd, "Invalid number! One number per time, please", error_lenght, 0);
+                            rc = send(ptr->fd, error_string, sizeof(error_string), 0);
                             if (rc < 0)
                             {
                                 if(errno == EAGAIN || errno == EWOULDBLOCK){
